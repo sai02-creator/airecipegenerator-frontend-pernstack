@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { User, Lock, Trash2, Save } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { dummyUser, dummyPreferences } from '../data/dummyData';
 
 const DIETARY_OPTIONS = ['Vegetarian', 'Vegan', 'Gluten-Free', 'Dairy-Free', 'Keto', 'Paleo'];
 const CUISINES = ['Any', 'Italian', 'Mexican', 'Indian', 'Chinese', 'Japanese', 'Thai', 'French', 'Mediterranean', 'American'];
@@ -12,6 +12,7 @@ const CUISINES = ['Any', 'Italian', 'Mexican', 'Indian', 'Chinese', 'Japanese', 
 const Settings = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
     // Profile state
@@ -37,37 +38,68 @@ const Settings = () => {
     });
 
     useEffect(() => {
-        loadUserData();
+        fetchUserData();
     }, []);
 
-    const loadUserData = () => {
-        setProfile({
-            name: dummyUser.name,
-            email: dummyUser.email
-        });
+    const fetchUserData = async () => {
+        try {
+            const response = await api.get('/users/profile');
+            const { user, preferences: userPrefs } = response.data.data;
 
-        setPreferences({
-            dietary_restrictions: dummyPreferences.dietary_restrictions || [],
-            allergies: dummyPreferences.allergies || [],
-            preferred_cuisines: dummyPreferences.preferred_cuisines || [],
-            default_servings: dummyPreferences.default_servings || 4,
-            measurement_unit: dummyPreferences.measurement_unit || 'metric'
-        });
+            setProfile({
+                name: user.name,
+                email: user.email
+            });
+
+            if (userPrefs) {
+                setPreferences({
+                    dietary_restrictions: userPrefs.dietary_restrictions || [],
+                    allergies: userPrefs.allergies || [],
+                    preferred_cuisines: userPrefs.preferred_cuisines || [],
+                    default_servings: userPrefs.default_servings || 4,
+                    measurement_unit: userPrefs.measurement_unit || 'metric'
+                });
+            }
+        } catch (error) {
+            toast.error('Failed to load user data');
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleProfileUpdate = (e) => {
+    const handleProfileUpdate = async (e) => {
         e.preventDefault();
-        // UI-only update
-        toast.success('Profile updated successfully');
+        setSaving(true);
+
+        try {
+            await api.put('/users/profile', profile);
+            toast.success('Profile updated successfully');
+
+            // Update local storage
+            const updatedUser = { ...user, ...profile };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+        } catch (error) {
+            toast.error('Failed to update profile');
+        } finally {
+            setSaving(false);
+        }
     };
 
-    const handlePreferencesUpdate = (e) => {
+    const handlePreferencesUpdate = async (e) => {
         e.preventDefault();
-        // UI-only update
-        toast.success('Preferences updated successfully');
+        setSaving(true);
+
+        try {
+            await api.put('/users/preferences', preferences);
+            toast.success('Preferences updated successfully');
+        } catch (error) {
+            toast.error('Failed to update preferences');
+        } finally {
+            setSaving(false);
+        }
     };
 
-    const handlePasswordChange = (e) => {
+    const handlePasswordChange = async (e) => {
         e.preventDefault();
 
         if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -80,12 +112,23 @@ const Settings = () => {
             return;
         }
 
-        // UI-only password change
-        toast.success('Password changed successfully');
-        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setSaving(true);
+
+        try {
+            await api.put('/users/change-password', {
+                currentPassword: passwordData.currentPassword,
+                newPassword: passwordData.newPassword
+            });
+            toast.success('Password changed successfully');
+            setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to change password');
+        } finally {
+            setSaving(false);
+        }
     };
 
-    const handleDeleteAccount = () => {
+    const handleDeleteAccount = async () => {
         if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
             return;
         }
@@ -96,10 +139,14 @@ const Settings = () => {
             return;
         }
 
-        // UI-only delete
-        toast.success('Account deleted successfully');
-        logout();
-        navigate('/login');
+        try {
+            await api.delete('/users/account');
+            toast.success('Account deleted successfully');
+            logout();
+            navigate('/login');
+        } catch (error) {
+            toast.error('Failed to delete account');
+        }
     };
 
     const toggleDietary = (option) => {
@@ -119,6 +166,17 @@ const Settings = () => {
                 : [...prev.preferred_cuisines, cuisine]
         }));
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Navbar />
+                <div className="flex items-center justify-center h-96">
+                    <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
