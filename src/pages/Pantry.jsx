@@ -1,29 +1,49 @@
 import { useState, useEffect } from 'react';
 import { Plus, Search, X, Calendar, AlertCircle } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import api from '../services/api';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
-import { dummyPantryItems, getExpiringItems } from '../data/dummyData';
 
 const CATEGORIES = ['Vegetables', 'Fruits', 'Dairy', 'Meat', 'Grains', 'Spices', 'Other'];
 
 const Pantry = () => {
     const [items, setItems] = useState([]);
     const [filteredItems, setFilteredItems] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [showAddModal, setShowAddModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [expiringItems, setExpiringItems] = useState([]);
 
     useEffect(() => {
-        // Load dummy data
-        setItems(dummyPantryItems);
-        setExpiringItems(getExpiringItems());
+        fetchPantryItems();
+        fetchExpiringItems();
     }, []);
 
     useEffect(() => {
         filterItems();
     }, [items, searchQuery, selectedCategory]);
+
+    const fetchPantryItems = async () => {
+        try {
+            const response = await api.get('/pantry');
+            setItems(response.data.data.items);
+        } catch (error) {
+            toast.error('Failed to load pantry items');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchExpiringItems = async () => {
+        try {
+            const response = await api.get('/pantry/expiring-soon?days=7');
+            setExpiringItems(response.data.data.items);
+        } catch (error) {
+            console.error('Failed to load expiring items');
+        }
+    };
 
     const filterItems = () => {
         let filtered = items;
@@ -41,13 +61,28 @@ const Pantry = () => {
         setFilteredItems(filtered);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (!confirm('Are you sure you want to delete this item?')) return;
 
-        // UI-only delete (no API call)
-        setItems(items.filter(item => item.id !== id));
-        toast.success('Item deleted');
+        try {
+            await api.delete(`/pantry/${id}`);
+            setItems(items.filter(item => item.id !== id));
+            toast.success('Item deleted');
+        } catch (error) {
+            toast.error('Failed to delete item');
+        }
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50">
+                <Navbar />
+                <div className="flex items-center justify-center h-96">
+                    <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -141,9 +176,9 @@ const Pantry = () => {
             {showAddModal && (
                 <AddItemModal
                     onClose={() => setShowAddModal(false)}
-                    onSuccess={(newItem) => {
-                        setItems([...items, newItem]);
-                        setExpiringItems(getExpiringItems());
+                    onSuccess={() => {
+                        fetchPantryItems();
+                        fetchExpiringItems();
                     }}
                 />
             )}
@@ -155,8 +190,8 @@ const CategoryButton = ({ label, active, onClick }) => (
     <button
         onClick={onClick}
         className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors ${active
-            ? 'bg-emerald-500 text-white'
-            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-emerald-500 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
     >
         {label}
@@ -220,22 +255,24 @@ const AddItemModal = ({ onClose, onSuccess }) => {
     });
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
-        // UI-only add (no API call)
-        const newItem = {
-            id: Date.now(),
-            user_id: 1,
-            ...formData,
-            quantity: parseFloat(formData.quantity),
-            expiry_date: formData.expiry_date || null,
-            created_at: new Date().toISOString()
-        };
-
-        toast.success('Item added to pantry');
-        onSuccess(newItem);
-        onClose();
+        try {
+            await api.post('/pantry', {
+                ...formData,
+                quantity: parseFloat(formData.quantity),
+                expiry_date: formData.expiry_date || null
+            });
+            toast.success('Item added to pantry');
+            onSuccess();
+            onClose();
+        } catch (error) {
+            toast.error('Failed to add item');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
