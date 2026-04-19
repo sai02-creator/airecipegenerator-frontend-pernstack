@@ -33,7 +33,7 @@ const Navbar = () => {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <Link to="/dashboard" className="flex items-center gap-2 text-xl font-semibold text-gray-900">
-                        <ChefHat className="w-7 h-7 text-emerald-500" />
+                        <ChefHat className="w-7 h-7 text-blue-500" />
                         <span>AI Recipe Generator</span>
                     </Link>
 
@@ -62,7 +62,7 @@ const Navbar = () => {
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                 className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                             >
-                                <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white font-semibold">
+                                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
                                     {user?.name?.charAt(0).toUpperCase() || 'U'}
                                 </div>
                                 <span className="hidden sm:inline font-medium">{user?.name || 'User'}</span>
@@ -75,7 +75,7 @@ const Navbar = () => {
                                     {/* User Info */}
                                     <div className="px-4 py-3 border-b border-gray-200">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                                            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-lg">
                                                 {user?.name?.charAt(0).toUpperCase() || 'U'}
                                             </div>
                                             <div className="flex-1 min-w-0">
@@ -111,7 +111,7 @@ const NavLink = ({ to, icon, label }) => {
     return (
         <Link
             to={to}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
         >
             {icon}
             <span>{label}</span>
