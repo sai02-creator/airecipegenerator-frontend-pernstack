@@ -3,78 +3,85 @@
 <p align="center">
   <img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=black"/>
   <img src="https://img.shields.io/badge/Vite-Build-646CFF?style=for-the-badge&logo=vite&logoColor=white"/>
-  <img src="https://img.shields.io/badge/AWS-S3-orange?style=for-the-badge&logo=amazon-aws&logoColor=white"/>
+  <img src="https://img.shields.io/badge/AWS-S3-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white"/>
   <img src="https://img.shields.io/badge/Axios-HTTP-5A29E4?style=for-the-badge&logo=axios&logoColor=white"/>
 </p>
 
 <p align="center">
-  🌐 Modern React frontend for AI-powered recipe generation with cloud deployment
+  🌐 Modern React frontend for an AI-powered recipe generation platform, deployed on AWS
 </p>
 
 ---
 
 ## 🌟 Overview
 
-The **AI Recipe Generator Frontend** provides a seamless interface for interacting with backend services to:
+The **AI Recipe Generator Frontend** is a modern, responsive React application that provides an intuitive interface for interacting with AI-powered backend services.
+
+It allows users to:
 
 - Generate recipes using AI
 - Manage pantry items
 - Plan meals and shopping lists
 
-It integrates with a REST API hosted on AWS EC2, delivering a fast, scalable, and user-friendly experience.
+The application communicates with a REST API hosted on AWS EC2 and delivers a fast, scalable, and user-friendly experience.
 
 ---
 
 ## 🏗 Architecture
 
 ```text
-Browser → React (Vite, S3 Static Hosting) → REST API (Node.js, EC2 Docker) → Neon PostgreSQL
+User (Browser)
+     ↓
+React Frontend (Vite - AWS S3)
+     ↓
+REST API (Node.js, Express - Docker on EC2)
+     ↓
+Neon PostgreSQL Database
 ```
 
 ---
 
 ## 🚀 Features
 
-- 🔐 **User Authentication (JWT-Based)**
-  Secure login & signup using JSON Web Tokens (JWT) for stateless authentication.
-  Tokens are stored on the client and included in API requests via Axios.
+- 🔐 **JWT-Based Authentication**
+  Secure login and signup using JSON Web Tokens. Tokens are stored on the client and attached to API requests.
 
-- 🤖 **AI Recipe Generation UI (Backend AI Service)**
-  Clean and interactive interface to generate recipes powered by backend AI APIs.
+- 🤖 **AI Recipe Generation Interface**
+  Interactive UI to generate recipes powered by backend AI (Gemini API).
 
-- 🥫 **Pantry Management Interface (REST API + Neon PostgreSQL)**
-  Add, update, and track pantry items with real-time data synced through backend services.
+- 🥫 **Pantry Management**
+  Add, update, and track pantry items with real-time syncing via REST APIs.
 
-- 📅 **Meal Planning Dashboard (State Management + API Integration)**
-  Organise meals with a dynamic UI that reflects live backend data.
+- 📅 **Meal Planning Dashboard**
+  Organise meals dynamically with real-time backend integration.
 
-- 🛒 **Shopping List UI (Derived Data + API Sync)**
-  Automatically generate shopping lists based on pantry items and planned meals.
+- 🛒 **Shopping List Generator**
+  Automatically generate shopping lists based on pantry and meal plans.
 
-- 🌐 **Cloud Hosting (AWS S3 Static Website Hosting)**
-  Frontend is deployed and served via AWS S3 for high availability.
+- 🌐 **Cloud Deployment (AWS S3)**
+  Hosted as a static website for high availability and scalability.
 
-- ⚡ **API Communication (Axios + REST API)**
-  Efficient and scalable communication with backend services hosted on AWS EC2 (Dockerised Node.js API).
+- ⚡ **API Integration (Axios)**
+  Efficient communication with backend services deployed on AWS EC2.
 
-- 📦 **Fast Build & Performance (Vite)**
-  Optimised build system ensuring fast development and high-performance production builds.
+- 📦 **Optimised Build (Vite)**
+  Fast development and high-performance production builds.
 
 ---
 
 ## 🛠 Tech Stack
 
 - 🎨 **Frontend:** React (Vite)
-- 🔗 **API Communication:** Axios (REST API Integration)
+- 🔗 **API Communication:** Axios
 - ☁️ **Hosting:** AWS S3 (Static Website Hosting)
-- ⚙️ **Backend:** Node.js (Express API on EC2, Dockerised)
+- ⚙️ **Backend:** Node.js (Express, Docker on EC2)
 - 🗄️ **Database:** Neon PostgreSQL
 
 ---
 
 ## 📸 Screenshots
 
-_Add real screenshots here (this boosts recruiter interest significantly)_
+_Add real screenshots to improve recruiter visibility_
 
 ```markdown
 ![Home Page](./screenshots/home.png)
@@ -118,10 +125,10 @@ npm run build
 
 ## ☁️ Deployment
 
-- 🚀 Hosted on AWS S3
-- 🌍 Served via static website hosting
+- 🚀 Hosted on AWS S3 (Static Website Hosting)
+- 🌍 Accessible globally via public URL
 - 🔗 Connected to backend API on EC2
-- 📦 Backend containerised using Docker
+- 🐳 Backend containerised using Docker
 
 ---
 
@@ -135,11 +142,21 @@ http://<EC2-IP>:8000/api
 
 ## 🔮 Future Improvements
 
-- 🌍 Add AWS CloudFront (CDN) for global performance optimisation
-- 🔒 Enable HTTPS (SSL) for secure communication
-- 🔁 Implement CI/CD pipeline (GitHub Actions)
+- 🌍 Add AWS CloudFront (CDN) for better performance
+- 🔒 Enable HTTPS (SSL)
+- 🔁 Implement CI/CD (GitHub Actions)
 - 📱 Improve mobile responsiveness and UX
-- 🧠 Enhance AI capabilities with advanced prompts
+- 🧠 Enhance AI capabilities with better prompts
+
+---
+
+## 🧠 Key Learnings
+
+- Built a scalable frontend using React and Vite
+- Integrated REST APIs with JWT-based authentication
+- Deployed a production-ready frontend on AWS S3
+- Connected frontend with a Dockerised backend on EC2
+- Designed UI for AI-powered dynamic content
 
 ---
 
@@ -147,7 +164,7 @@ http://<EC2-IP>:8000/api
 
 **Sai Chaitanya**
 
-- 🌐 Sydney, Australia
+- 📍 Sydney, Australia
 - 💼 Open to opportunities
 - 🔗 LinkedIn: https://www.linkedin.com/in/sai-chaitanya-73b598284/
 - 💻 GitHub: https://github.com/sai02-creator
