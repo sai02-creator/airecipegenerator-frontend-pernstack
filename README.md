@@ -31,14 +31,30 @@ Browser → React App (S3) → Backend API (EC2 Docker) → Neon PostgreSQL
 
 ## 🚀 Features
 
-- 🔐 User Authentication (Login / Signup)
-- 🤖 AI Recipe Generation UI
-- 🥫 Pantry Management Interface
-- 📅 Meal Planning Dashboard
-- 🛒 Shopping List UI
-- ⚡ Fast and responsive UI
+- 🔐 **User Authentication (JWT-Based)**  
+  Secure login & signup using JSON Web Tokens (JWT) for stateless authentication.  
+  Tokens are stored on the client and included in API requests via Axios.
 
----
+- 🤖 **AI Recipe Generation UI (Backend AI Service)**  
+  Clean and interactive interface to generate recipes powered by backend AI APIs.
+
+- 🥫 **Pantry Management Interface (REST API + Neon PostgreSQL)**  
+  Add, update, and track pantry items with real-time data synced through backend services.
+
+- 📅 **Meal Planning Dashboard (State Management + API Integration)**  
+  Organise meals with a dynamic UI that reflects live backend data.
+
+- 🛒 **Shopping List UI (Derived Data + API Sync)**  
+  Automatically generate shopping lists based on pantry items and planned meals.
+
+- 🌐 **Cloud Hosting (AWS S3 Static Website Hosting)**  
+  Frontend is deployed and served via AWS S3 for high availability.
+
+- ⚡ **API Communication (Axios + REST API)**  
+  Efficient and scalable communication with backend services hosted on AWS EC2 (Dockerised Node.js API).
+
+- 📦 **Fast Build & Performance (Vite)**  
+  Optimised build system ensuring fast development and high-performance production builds.
 
 ## 🛠 Tech Stack
 
